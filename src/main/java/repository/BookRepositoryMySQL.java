@@ -3,10 +3,7 @@ package repository;
 import model.Book;
 import model.builder.BookBuilder;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +17,7 @@ public class BookRepositoryMySQL implements BookRepository {
 
     @Override
     public List<Book> findAll() {
+        //aici putem folosi Statement pentru ca datele de intrare nu modifica Stringul
         String sql = "SELECT * FROM book;";
 
         List<Book> books = new ArrayList<>();
@@ -46,16 +44,20 @@ public class BookRepositoryMySQL implements BookRepository {
                 .setTitle(resultSet.getString("title"))
                 .setAuthor(resultSet.getString("author"))
                 .setPublishedDate(new java.sql.Date(resultSet.getDate("publishedDate").getTime()).toLocalDate())
+                .setStock(resultSet.getInt("stock"))
+                .setPrice(resultSet.getFloat("price"))
                 .build();
     }
 
     @Override
     public Optional<Book> findById(Long id) {
-        String sql = "SELECT * FROM book WHERE id = " + id;
+        //avem nevoie de Prepared Statement
+        String sql = "SELECT * FROM book WHERE id = ?";
         Optional<Book> book = Optional.empty();
         try{
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(sql);
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setLong(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
 
             if(resultSet.next()) {
                 book = Optional.of(getBookFromResultSet(resultSet));
@@ -69,12 +71,17 @@ public class BookRepositoryMySQL implements BookRepository {
 
     @Override
     public boolean save(Book book) {
-        String newSql = "INSERT INTO book VALUES (null, \'" + book.getAuthor()
-                +"\', \'" + book.getTitle() + "\', \'" + book.getPublishedDate() + "\' );";
+        String newSql = "INSERT INTO book VALUES (null, ?, ?, ?, ?, ?);";
 
         try{
-            Statement statement = connection.createStatement();
-            statement.executeUpdate(newSql);
+            PreparedStatement preparedStatement = connection.prepareStatement(newSql);
+            preparedStatement.setString(1, book.getAuthor());
+            preparedStatement.setString(2, book.getTitle());
+            preparedStatement.setDate(3, Date.valueOf(book.getPublishedDate()));
+            preparedStatement.setInt(4, book.getStock());
+            preparedStatement.setFloat(5, book.getPrice());
+
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
@@ -84,12 +91,37 @@ public class BookRepositoryMySQL implements BookRepository {
 
     @Override
     public boolean delete(Book book) {
-        String deleteSql = "DELETE FROM book WHERE author = \'" + book.getAuthor() +
-                "\' AND title = \'" + book.getTitle() + "\';";
+        //nu avem nevoie de PreparedStatement pentru ca delete se face la selectarea unui rand si apasarea butonului de delete
+        //o facem doar pentru a fi codul mai lizibil
+
+        String deleteSql = "DELETE FROM book WHERE author = ? AND title = ? AND stock = ? AND price = ?;";
 
         try{
-            Statement statement = connection.createStatement();
-            statement.executeUpdate(deleteSql);
+            PreparedStatement preparedStatement = connection.prepareStatement(deleteSql);
+            preparedStatement.setString(1, book.getAuthor());
+            preparedStatement.setString(2, book.getTitle());
+            preparedStatement.setInt(3, book.getStock());
+            preparedStatement.setFloat(4, book.getPrice());
+
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    public boolean updateStock(Book book) {
+        String updateSql = "UPDATE book SET stock = stock - 1 WHERE author = ? AND title = ? AND stock = ? AND price = ?;";
+
+        try{
+            PreparedStatement preparedStatement = connection.prepareStatement(updateSql);
+            preparedStatement.setString(1, book.getAuthor());
+            preparedStatement.setString(2, book.getTitle());
+            preparedStatement.setInt(3, book.getStock());
+            preparedStatement.setFloat(4, book.getPrice());
+
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
             return false;

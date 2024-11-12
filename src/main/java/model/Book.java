@@ -1,5 +1,6 @@
 package model;
 
+import java.sql.Date;
 import java.time.LocalDate;
 
 public class Book {
@@ -7,6 +8,24 @@ public class Book {
     private String title;
     private String author;
     private LocalDate publishedDate;
+    private Integer stock;
+    private Float price;
+
+    public Integer getStock() {
+        return stock;
+    }
+
+    public void setStock(Integer stock) {
+        this.stock = stock;
+    }
+
+    public Float getPrice() {
+        return price;
+    }
+
+    public void setPrice(Float price) {
+        this.price = price;
+    }
 
     public Long getId() {
         return id;
