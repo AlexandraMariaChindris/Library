@@ -10,7 +10,7 @@ public class JDBConnectionWrapper {
     private static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
     private static final String DB_URL = "jdbc:mysql://localhost/";
     private static final String USER = "root";
-    private static final String PASSWORD = "Kiki2003!";
+    private static final String PASSWORD = "";
     private static final int TIMEOUT = 5;
     private Connection connection;
 
@@ -26,6 +26,8 @@ public class JDBConnectionWrapper {
         }
     }
 
+
+
     private void createTables() throws SQLException {
         Statement statement = connection.createStatement();
         String sql = "CREATE TABLE IF NOT EXISTS book(" +
@@ -33,11 +35,25 @@ public class JDBConnectionWrapper {
                 "author VARCHAR(500) NOT NULL," +
                 "title VARCHAR(500) NOT NULL," +
                 "publishedDate datetime DEFAULT NULL," +
+                "stock INT NOT NULL," +
+                "price FLOAT NOT NULL," +
                 "PRIMARY KEY (id)," +
                 "UNIQUE KEY id_UNIQUE(id)" +
                 ") ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;";
 
         statement.execute(sql);
+
+        String sql_order = "CREATE TABLE IF NOT EXISTS book_order(" +
+                "id bigint NOT NULL AUTO_INCREMENT," +
+                "author VARCHAR(500) NOT NULL," +
+                "title VARCHAR(500) NOT NULL," +
+                "quantity INT NOT NULL," +
+                "price FLOAT NOT NULL," +
+                "PRIMARY KEY (id)," +
+                "UNIQUE KEY id_UNIQUE(id)" +
+                ") ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;";
+
+        statement.execute(sql_order);
     }
 
     public boolean testConnection() throws SQLException {

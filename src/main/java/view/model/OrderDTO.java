@@ -2,9 +2,8 @@ package view.model;
 
 import javafx.beans.property.*;
 
+public class OrderDTO {
 
-public class BookDTO {
-    //mi se vor sterge si adauga carti in functie de ce contine ObservableList
     private StringProperty author;
 
     public void setauthor(String author) {
@@ -39,21 +38,21 @@ public class BookDTO {
         return title;
     }
 
-    private IntegerProperty stock;
+    private IntegerProperty quantity;
 
-    public void setStock(Integer stock) {
-        stockProperty().set(stock);
+    public void setQuantity(Integer quantity) {
+        quantityProperty().set(quantity);
     }
 
-    public Integer getStock() {
-        return stockProperty().get();
+    public Integer getQuantity() {
+        return quantityProperty().get();
     }
 
-    public IntegerProperty stockProperty() {
-        if(stock == null) {
-            stock = new SimpleIntegerProperty(this, "stock");
+    public IntegerProperty quantityProperty() {
+        if(quantity == null) {
+            quantity = new SimpleIntegerProperty(this, "quantity");
         }
-        return stock;
+        return quantity;
     }
 
     private FloatProperty price;
@@ -72,6 +71,5 @@ public class BookDTO {
         }
         return price;
     }
-
 
 }
