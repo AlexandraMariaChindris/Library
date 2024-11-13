@@ -33,9 +33,13 @@ public class ComponentFactory {
     private static ComponentFactory instance;
 
     //lazy initialization
-    public static synchronized ComponentFactory getInstance(Boolean componentsForTest, Stage primaryStage) {
+    public static ComponentFactory getInstance(Boolean componentsForTest, Stage primaryStage) {
         if(instance == null) {
-            instance = new ComponentFactory(componentsForTest, primaryStage);
+            synchronized (ComponentFactory.class) {
+                if(instance == null) {
+                    instance = new ComponentFactory(componentsForTest, primaryStage);
+                }
+            }
         }
         return instance;
     }
