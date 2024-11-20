@@ -4,8 +4,8 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import mapper.BookMapper;
 import mapper.OrderMapper;
-import service.BookService;
-import service.OrderService;
+import service.book.BookService;
+import service.order.OrderService;
 import view.BookView;
 import view.model.BookDTO;
 import view.model.builder.BookDTOBuilder;
@@ -88,6 +88,7 @@ public class BookController {
                 if(saleSuccessful && updateStockSuccessful) {
                     bookView.addDisplayAlertMessage("Sale Successful", "Book Sold", "Book was successfully sold.");
                     bookView.addOrderToObservableList(OrderMapper.convertBookDTOToOrderDTO(bookDTO));
+                    BookMapper.convertBookDTOToBook(bookDTO).setStock(BookMapper.convertBookDTOToBook(bookDTO).getStock() - 1);
                     bookView.updateBookObservableList();
                 }
                 else{

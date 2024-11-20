@@ -1,7 +1,7 @@
-package service;
+package service.order;
 
 import model.Order;
-import repository.OrderRepository;
+import repository.order.OrderRepository;
 
 import java.util.List;
 

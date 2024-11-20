@@ -1,6 +1,5 @@
-package repository;
+package repository.order;
 
-import model.Book;
 import model.Order;
 import model.builder.OrderBuilder;
 
