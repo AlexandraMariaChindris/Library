@@ -4,9 +4,8 @@ import model.builder.BookBuilder;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import repository.BookRepository;
-import repository.BookRepositoryMock;
-import repository.BookRepositoryMySQL;
+import repository.book.BookRepository;
+import repository.book.BookRepositoryMySQL;
 
 import java.sql.Connection;
 import java.time.LocalDate;
