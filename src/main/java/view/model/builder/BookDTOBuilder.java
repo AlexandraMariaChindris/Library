@@ -2,6 +2,8 @@ package view.model.builder;
 
 import view.model.BookDTO;
 
+import java.time.LocalDate;
+
 public class BookDTOBuilder {
 
     private BookDTO bookDTO;
@@ -29,6 +31,11 @@ public class BookDTOBuilder {
         bookDTO.setPrice(price);
         return this;
     }
+
+//    public BookDTOBuilder setPublishedDate(LocalDate publishedDate) {
+//        bookDTO.setPublishedDate(publishedDate);
+//        return this;
+//    }
 
     public BookDTO build() {
         return bookDTO;

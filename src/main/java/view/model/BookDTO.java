@@ -2,6 +2,8 @@ package view.model;
 
 import javafx.beans.property.*;
 
+import java.time.LocalDate;
+
 
 public class BookDTO {
     //mi se vor sterge si adauga carti in functie de ce contine ObservableList
@@ -72,6 +74,23 @@ public class BookDTO {
         }
         return price;
     }
+
+//    private ObjectProperty<LocalDate> publishedDate;
+//
+//    public void setPublishedDate(LocalDate publishedDate) {
+//       publishedDateProperty().set(publishedDate);
+//    }
+//
+//    public LocalDate getPublishedDate() {
+//        return publishedDateProperty().get();
+//    }
+//
+//    public ObjectProperty<LocalDate> publishedDateProperty() {
+//        if(publishedDate == null) {
+//            publishedDate = new SimpleObjectProperty(this, "publishedDate");
+//        }
+//        return publishedDate;
+//    }
 
 
 }

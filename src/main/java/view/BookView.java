@@ -27,22 +27,29 @@ public class BookView {
     private TextField titleTextField;
     private TextField stockTextField;
     private TextField priceTextField;
+    private TextField dateTextField;
     private Label authorLabel;
     private Label titleLabel;
     private Label stockLabel;
     private Label priceLabel;
+    private Label dateLabel;
     private Button saveButton;
     private Button deleteButton;
     private Button saleButton;
+    private Button logoutButton;
+    private Stage stage;
+    private Scene scene;
+
 
     public BookView(Stage primaryStage, List<BookDTO> books, List<OrderDTO> orders) {
-        primaryStage.setTitle("Library");
+        stage = primaryStage;
+        stage.setTitle("Library");
 
         GridPane gridPane = new GridPane();
         initializerGridpage(gridPane);
 
-        Scene scene = new Scene(gridPane, 1000, 500);
-        primaryStage.setScene(scene);
+        scene = new Scene(gridPane, 1000, 500);
+        stage.setScene(scene);
 
         booksObservableList = FXCollections.observableArrayList(books);
         ordersObservableList = FXCollections.observableArrayList(orders);
@@ -50,7 +57,8 @@ public class BookView {
         initTableView(gridPane); //tot ce adaugam in grid se adauga automat in scene si in primary stage
         initOrderTableView(gridPane);
         initSaveOptions(gridPane);
-        primaryStage.show();
+
+        stage.show();
     }
 
     private void initSaveOptions(GridPane gridPane) {
@@ -66,6 +74,12 @@ public class BookView {
         authorTextField = new TextField();
         gridPane.add(authorTextField, 4, 1);
 
+        dateLabel = new Label("Date");
+        gridPane.add(dateLabel, 5, 1);
+
+        dateTextField = new TextField();
+        gridPane.add(dateTextField, 6, 1);
+
         stockLabel = new Label("Stock");
         gridPane.add(stockLabel, 1, 2);
 
@@ -79,13 +93,16 @@ public class BookView {
         gridPane.add(priceTextField, 4, 2);
 
         saveButton = new Button("Save");
-        gridPane.add(saveButton, 5, 1);
+        gridPane.add(saveButton, 7, 1);
 
         deleteButton = new Button("Delete");
-        gridPane.add(deleteButton, 6, 1);
+        gridPane.add(deleteButton, 8, 1);
 
         saleButton = new Button("Sale");
-        gridPane.add(saleButton, 7, 1);
+        gridPane.add(saleButton, 9, 1);
+
+        logoutButton = new Button("Logout");
+        gridPane.add(logoutButton, 10, 1);
 
     }
 
@@ -154,6 +171,9 @@ public class BookView {
         saleButton.setOnAction(saleButtonListener);
     }
 
+    public void addLogoutButtonListener(EventHandler<ActionEvent> logoutButtonListener){
+        logoutButton.setOnAction(logoutButtonListener);
+    }
 
     public void addDisplayAlertMessage(String title, String header, String contentInformation){
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -162,6 +182,10 @@ public class BookView {
         alert.setContentText(contentInformation);
 
         alert.showAndWait();
+    }
+
+    public Stage getStage() {
+        return stage;
     }
 
     public String getAuthor(){
@@ -178,6 +202,10 @@ public class BookView {
 
     public String getPrice(){
         return priceTextField.getText();
+    }
+
+    public String getDate(){
+        return dateTextField.getText();
     }
 
     public void addBookToObservableList(BookDTO bookDTO){
@@ -200,8 +228,11 @@ public class BookView {
         this.ordersObservableList.remove(orderDTO);
     }
 
-
     public TableView getBookTableView(){
         return bookTableView;
+    }
+
+    public Scene getScene() {
+        return scene;
     }
 }

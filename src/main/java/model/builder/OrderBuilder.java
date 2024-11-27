@@ -2,6 +2,8 @@ package model.builder;
 
 import model.Order;
 
+import java.sql.Timestamp;
+
 public class OrderBuilder {
 
     private Order order;
@@ -12,6 +14,11 @@ public class OrderBuilder {
 
     public OrderBuilder setId(Long id){
         order.setId(id);
+        return this;
+    }
+
+    public OrderBuilder setIdUserLogged(Long id){
+        order.setUser_id(id);
         return this;
     }
 
@@ -34,6 +41,8 @@ public class OrderBuilder {
         order.setPrice(price);
         return this;
     }
+
+
 
     public Order build(){
         return order;

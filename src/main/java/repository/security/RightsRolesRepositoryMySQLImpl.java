@@ -44,15 +44,20 @@ public class RightsRolesRepositoryMySQLImpl implements RightsRolesRepository {
 
     @Override
     public Role findRoleByTitle(String role) {
-        Statement statement;
+
         try {
-            statement = connection.createStatement();
-            String fetchRoleSql = "Select * from " + ROLE + " where `role`=\'" + role + "\'";
-            ResultSet roleResultSet = statement.executeQuery(fetchRoleSql);
-            roleResultSet.next();
-            Long roleId = roleResultSet.getLong("id");
-            String roleTitle = roleResultSet.getString("role");
-            return new Role(roleId, roleTitle, null);
+
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM `" + ROLE + "` WHERE `role` = ?");
+            preparedStatement.setString(1, role);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if(resultSet.next()){
+                Long roleId = resultSet.getLong("id");
+                String roleTitle = resultSet.getString("role");
+                return new Role(roleId, roleTitle, null);
+            }
+            else
+                return null;
         } catch (SQLException e) {
             e.printStackTrace();
         }
