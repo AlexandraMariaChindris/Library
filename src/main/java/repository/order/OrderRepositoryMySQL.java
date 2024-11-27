@@ -18,7 +18,7 @@ public class OrderRepositoryMySQL implements OrderRepository {
 
     @Override
     public List<Order> findAll() {
-        String sql = "SELECT * FROM book_order;";
+        String sql = "SELECT * FROM book_orders;";
 
         List<Order> orders = new ArrayList<>();
 
@@ -68,14 +68,15 @@ public class OrderRepositoryMySQL implements OrderRepository {
 
     @Override
     public boolean save(Order order) {
-        String newSql = "INSERT INTO book_order VALUES (null, ?, ?, 1, ?);";
+        String newSql = "INSERT INTO book_orders (user_id, author, title, quantity, price) VALUES (?, ?, ?, 1, ?);";
 
         try{
             PreparedStatement preparedStatement = connection.prepareStatement(newSql);
-            preparedStatement.setString(1, order.getAuthor());
-            preparedStatement.setString(2, order.getTitle());
+            preparedStatement.setInt(1, Math.toIntExact(order.getUser_id()));
+            preparedStatement.setString(2, order.getAuthor());
+            preparedStatement.setString(3, order.getTitle());
             //preparedStatement.setInt(3, order.getQuantity());
-            preparedStatement.setFloat(3, order.getPrice());
+            preparedStatement.setFloat(4, order.getPrice());
 
             preparedStatement.executeUpdate();
         } catch (SQLException e) {

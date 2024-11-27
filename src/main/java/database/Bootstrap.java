@@ -1,17 +1,26 @@
 package database;
 
+import model.Role;
+import model.User;
+import model.builder.UserBuilder;
 import repository.security.RightsRolesRepository;
 import repository.security.RightsRolesRepositoryMySQLImpl;
+import repository.user.UserRepository;
+import repository.user.UserRepositoryMySQL;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import static database.Constants.Rights.RIGHTS;
-import static database.Constants.Roles.ROLES;
+import static database.Constants.Roles.*;
+import static database.Constants.Schemas.PRODUCTION;
 import static database.Constants.Schemas.SCHEMAS;
 import static database.Constants.getRolesRights;
 
@@ -22,9 +31,9 @@ public class Bootstrap {
     private static RightsRolesRepository rightsRolesRepository;
 
     public static void main(String[] args) throws SQLException {
-        dropAll();
+        //dropAll();
 
-        bootstrapTables();
+        //bootstrapTables();
 
         bootstrapUserData();
     }
@@ -43,6 +52,8 @@ public class Bootstrap {
                     "TRUNCATE `user_role`;",
                     "DROP TABLE `user_role`;",
                     "TRUNCATE `role`;",
+                    "TRUNCATE `book_orders`;",
+                    "DROP TABLE `book_orders`;",
                     "DROP TABLE  `book`, `role`, `user`;"
             };
 
@@ -120,6 +131,58 @@ public class Bootstrap {
     }
 
     private static void bootstrapUserRoles() throws SQLException {
+
         //daca vrem sa avem niste useri predefiniti pt test, un admin, employee
+
+        for (String schema : SCHEMAS){
+            JDBConnectionWrapper connectionWrapper = new JDBConnectionWrapper(PRODUCTION);
+            Connection connection = connectionWrapper.getConnection();
+            rightsRolesRepository = new RightsRolesRepositoryMySQLImpl(connection);
+            UserRepository userRepository = new UserRepositoryMySQL(connection, rightsRolesRepository);
+
+            System.out.println("Done user bootstrap");
+            System.out.println(ADMINISTRATOR);
+            Role adminRole = rightsRolesRepository.findRoleByTitle(ADMINISTRATOR);
+            List<Role> adminRoleList = Collections.singletonList(adminRole);
+
+            System.out.println(adminRoleList);
+
+            User user = new UserBuilder()
+                        .setUsername("admin@gmail.com")
+                        .setPassword(hashPassword("Admin2003!"))
+                        .setRoles(adminRoleList)
+                        .build();
+
+            System.out.println(user);
+
+            boolean userExists = userRepository.existsByUsername(user.getUsername());
+            if (!userExists) {
+                userRepository.save(user);
+                System.out.println("save");
+            }
+            else
+                System.out.println("exists");
+        }
+
+    }
+
+    private static String hashPassword(String password) {
+        try{
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
+            StringBuilder hexString = new StringBuilder();
+
+            for (byte b : hash) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1)
+                    hexString.append('0');
+                hexString.append(hex);
+            }
+
+            return hexString.toString();
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

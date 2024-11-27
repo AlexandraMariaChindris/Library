@@ -3,6 +3,8 @@ package service.user;
 import model.Role;
 import model.User;
 import model.builder.UserBuilder;
+import model.validator.Notification;
+import model.validator.UserValidator;
 import repository.security.RightsRolesRepository;
 import repository.user.UserRepository;
 
@@ -23,18 +25,35 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public boolean register(String username, String password) {
-        String encodedPassword = hashPassword(password);
+    public Notification<Boolean> register(String username, String password) {
+
         
         Role customerRole = rightsRolesRepository.findRoleByTitle(CUSTOMER);
         
         User user = new UserBuilder()
                 .setUsername(username)
-                .setPassword(encodedPassword)
-                .setRoles(Collections.singletonList(customerRole))
+                .setPassword(password)
+                .setRoles(Collections.singletonList(customerRole))//creeaza o lista de tipul singleton, o lista imutabila, care are o singura copie la un singur element
                 .build();
-        
-        return userRepository.save(user);
+
+        UserValidator userValidator = new UserValidator(user);
+
+        boolean userValid = userValidator.validate();
+        boolean userExists = userRepository.existsByUsername(username);
+        Notification<Boolean> userRegisterNotification = new Notification<>();
+
+        if(!userValid) {
+            userValidator.getErrors().forEach(userRegisterNotification::addError);
+            userRegisterNotification.setResult(Boolean.FALSE);
+        } else if(userExists) {
+            userRegisterNotification.addError("Username is already in use!");
+            userRegisterNotification.setResult(Boolean.FALSE);
+        } else {
+            user.setPassword(hashPassword(password));
+            userRegisterNotification.setResult(userRepository.save(user));
+        }
+
+        return userRegisterNotification;
     }
 
     private String hashPassword(String password) {
@@ -58,7 +77,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public User login(String username, String password) {
+    public Notification<User> login(String username, String password) {
         return userRepository.findByUsernameAndPassword(username, hashPassword(password));
     }
 

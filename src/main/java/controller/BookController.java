@@ -2,6 +2,9 @@ package controller;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import launcher.LoginComponentFactory;
 import mapper.BookMapper;
 import mapper.OrderMapper;
 import service.book.BookService;
@@ -16,6 +19,8 @@ public class BookController {
     private final BookView bookView;
     private final BookService bookService;
     private final OrderService orderService;
+    private Long user_id_logged;
+
 
     public BookController(BookView bookView, BookService bookService, OrderService orderService) {
         this.bookView = bookView;
@@ -25,6 +30,7 @@ public class BookController {
         this.bookView.addSaveButtonListener(new SaveButtonListener());
         this.bookView.addDeleteButtonListener(new DeleteButtonListener());
         this.bookView.addSaleButtonListener(new SaleButtonListener());
+        this.bookView.addLogoutButtonListener(new LogoutButtonListener());
     }
 
     private class SaveButtonListener implements EventHandler<ActionEvent> {
@@ -35,9 +41,10 @@ public class BookController {
             String author = bookView.getAuthor();
             String stock = bookView.getStock();
             String price = bookView.getPrice();
+            String date  = bookView.getDate();
 
-            if(title.isEmpty() || author.isEmpty() || stock == null || price == null) {
-                bookView.addDisplayAlertMessage("Save Error", "Problem at Author, Title, Stock or Price fields", "Can not have an empty field.");
+            if(title.isEmpty() || author.isEmpty() || stock.isEmpty() || price.isEmpty() || date.isEmpty()) {
+                bookView.addDisplayAlertMessage("Save Error", "Problem at Author, Title, Stock, Price or Date fields", "Can not have an empty field.");
             }
             else {
 
@@ -83,7 +90,7 @@ public class BookController {
         public void handle(ActionEvent actionEvent) {
             BookDTO bookDTO = (BookDTO) bookView.getBookTableView().getSelectionModel().getSelectedItem();
             if(bookDTO != null) {
-                boolean saleSuccessful = orderService.save(OrderMapper.convertBookDTOToOrder(bookDTO));
+                boolean saleSuccessful = orderService.save(OrderMapper.convertBookDTOToOrder(bookDTO, user_id_logged));
                 boolean updateStockSuccessful = bookService.updateStock(BookMapper.convertBookDTOToBook(bookDTO));
                 if(saleSuccessful && updateStockSuccessful) {
                     bookView.addDisplayAlertMessage("Sale Successful", "Book Sold", "Book was successfully sold.");
@@ -99,5 +106,19 @@ public class BookController {
 
             }
         }
+    }
+
+    private class LogoutButtonListener implements EventHandler<ActionEvent> {
+
+        @Override
+        public void handle(ActionEvent event) {
+            Stage stage = LoginComponentFactory.getInstance(false, bookView.getStage()).getLoginView().getStage();
+            Scene scene = LoginComponentFactory.getInstance(false, bookView.getStage()).getLoginView().getScene();
+            LoginComponentFactory.getInstance(false, stage).getLoginView().getStage().setScene(scene);
+        }
+    }
+
+    public void setUser_id_logged(Long user_id_logged) {
+        this.user_id_logged = user_id_logged;
     }
 }

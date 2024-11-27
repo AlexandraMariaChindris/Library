@@ -16,28 +16,33 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
+
 public class LoginView {
 
     private TextField userTextField;
     private PasswordField passwordField;
     private Button signInButton;
     private Button logInButton;
-    private Text actiontarget;
+    private Text actionTarget;
+    private Stage stage;
+    private Scene scene;
 
     public LoginView(Stage primaryStage) {
-        primaryStage.setTitle("Book Store");
+        stage = primaryStage;
+        stage.setTitle("Book Store");
 
         GridPane gridPane = new GridPane();
         initializeGridPane(gridPane);
 
-        Scene scene = new Scene(gridPane, 720, 480);
-        primaryStage.setScene(scene);
+        scene = new Scene(gridPane, 720, 480);
+        stage.setScene(scene);
 
         initializeSceneTitle(gridPane);
 
         initializeFields(gridPane);
 
-        primaryStage.show();
+        stage.show();
     }
 
     private void initializeGridPane(GridPane gridPane){
@@ -78,9 +83,9 @@ public class LoginView {
         logInButtonHBox.getChildren().add(logInButton);
         gridPane.add(logInButtonHBox, 0, 4);
 
-        actiontarget = new Text();
-        actiontarget.setFill(Color.FIREBRICK);
-        gridPane.add(actiontarget, 1, 6);
+        actionTarget = new Text();
+        actionTarget.setFill(Color.FIREBRICK);
+        gridPane.add(actionTarget, 1, 6);
     }
 
     public String getUsername() {
@@ -91,7 +96,7 @@ public class LoginView {
         return passwordField.getText();
     }
 
-    public void setActionTargetText(String text){ this.actiontarget.setText(text);}
+    public void setActionTargetText(String text){ this.actionTarget.setText(text);}
 
     public void addLoginButtonListener(EventHandler<ActionEvent> loginButtonListener) {
         logInButton.setOnAction(loginButtonListener);
@@ -99,5 +104,13 @@ public class LoginView {
 
     public void addRegisterButtonListener(EventHandler<ActionEvent> signInButtonListener) {
         signInButton.setOnAction(signInButtonListener);
+    }
+
+    public Stage getStage() {
+        return stage;
+    }
+
+    public Scene getScene() {
+        return scene;
     }
 }

@@ -1,14 +1,17 @@
 package model;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 
 public class Order {
 
     private Long id;
+    private Long user_id;
     private String title;
     private String author;
     private Integer quantity;
     private Float price;
+
 
     public Long getId() {
         return id;
@@ -16,6 +19,14 @@ public class Order {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(Long user_id) {
+        this.user_id = user_id;
     }
 
     public String getTitle() {
@@ -49,4 +60,6 @@ public class Order {
     public void setPrice(Float price) {
         this.price = price;
     }
+
+
 }

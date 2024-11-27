@@ -12,6 +12,8 @@ public class SQLTableCreationFactory {
                         "  author varchar(500) NOT NULL," +
                         "  title varchar(500) NOT NULL," +
                         "  publishedDate datetime DEFAULT NULL," +
+                        "  stock INT NOT NULL," +
+                        "  price FLOAT NOT NULL," +
                         "  PRIMARY KEY (id)," +
                         "  UNIQUE KEY id_UNIQUE (id)" +
                         ") ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;";
@@ -24,7 +26,24 @@ public class SQLTableCreationFactory {
                         "  PRIMARY KEY (id)," +
                         "  UNIQUE INDEX id_UNIQUE (id ASC)," +
                         "  UNIQUE INDEX username_UNIQUE (username ASC));";
-
+            case BOOK_ORDERS:
+                return "CREATE TABLE IF NOT EXISTS book_orders(" +
+                        "id INT NOT NULL AUTO_INCREMENT," +
+                        "user_id INT NOT NULL," +
+                        "author VARCHAR(200) NOT NULL," +
+                        "title VARCHAR(200) NOT NULL," +
+                        "quantity INT NOT NULL," +
+                        "price FLOAT NOT NULL," +
+                        "time TIMESTAMP DEFAULT CURRENT_TIMESTAMP," +
+                        "PRIMARY KEY (id)," +
+                        "UNIQUE INDEX id_UNIQUE (id ASC)," +
+                        "INDEX user_id_idx (user_id ASC)," +
+                        "CONSTRAINT user_orders_fkid" +
+                        "    FOREIGN KEY (user_id)" +
+                        "    REFERENCES user (id)" +
+                        "    ON DELETE CASCADE" +
+                        "    ON UPDATE CASCADE" +
+                        ") ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;";
             case ROLE:
                 return "  CREATE TABLE IF NOT EXISTS role (" +
                         "  id INT NOT NULL AUTO_INCREMENT," +
