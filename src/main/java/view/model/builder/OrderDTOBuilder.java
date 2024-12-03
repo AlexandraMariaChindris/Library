@@ -2,6 +2,9 @@ package view.model.builder;
 
 import view.model.OrderDTO;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
 public class OrderDTOBuilder {
 
     private OrderDTO orderDTO;
@@ -10,8 +13,9 @@ public class OrderDTOBuilder {
         orderDTO = new OrderDTO();
     }
 
+
     public OrderDTOBuilder setAuthor(String author) {
-        orderDTO.setauthor(author);
+        orderDTO.setAuthor(author);
         return this;
     }
 
@@ -27,6 +31,11 @@ public class OrderDTOBuilder {
 
     public OrderDTOBuilder setPrice(Float price) {
         orderDTO.setPrice(price);
+        return this;
+    }
+
+    public OrderDTOBuilder setTime(LocalDateTime time) {
+        orderDTO.setTime(time);
         return this;
     }
 

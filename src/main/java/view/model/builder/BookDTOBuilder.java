@@ -13,7 +13,7 @@ public class BookDTOBuilder {
     }
 
     public BookDTOBuilder setAuthor(String author) {
-        bookDTO.setauthor(author);
+        bookDTO.setAuthor(author);
         return this;
     }
 
@@ -32,10 +32,10 @@ public class BookDTOBuilder {
         return this;
     }
 
-//    public BookDTOBuilder setPublishedDate(LocalDate publishedDate) {
-//        bookDTO.setPublishedDate(publishedDate);
-//        return this;
-//    }
+    public BookDTOBuilder setPublishedDate(LocalDate publishedDate) {
+        bookDTO.setPublishedDate(publishedDate);
+        return this;
+    }
 
     public BookDTO build() {
         return bookDTO;

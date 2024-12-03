@@ -27,15 +27,11 @@ public class LoginComponentFactory {
     private final BookRepository bookRepository;
     private final BookService bookService;
     private static LoginComponentFactory instance;
-//    private static Boolean componentsForTests;
-//    private static Stage stage;
 
     public static LoginComponentFactory getInstance(Boolean aComponentsForTests, Stage aStage) {
-        if (instance == null) {
+        if(instance == null) {
             synchronized (LoginComponentFactory.class) {
                 if (instance == null) {
-//                    componentsForTests = aComponentsForTests;
-//                    stage = aStage;
                     instance = new LoginComponentFactory(aComponentsForTests, aStage);
                 }
             }
@@ -55,13 +51,6 @@ public class LoginComponentFactory {
         this.bookService = new BookServiceImpl(bookRepository);
     }
 
-//    public static Stage getStage(){
-//        return stage;
-//    }
-//
-//    public static Boolean getComponentsForTests(){
-//        return componentsForTests;
-//    }
 
     public AuthenticationService getAuthenticationService(){
         return authenticationService;

@@ -12,11 +12,11 @@ import java.util.stream.Collectors;
 public class BookMapper {
 
     public static BookDTO convertBookToBookDTO(Book book) {
-        return new BookDTOBuilder().setTitle(book.getTitle()).setAuthor(book.getAuthor()).setStock(book.getStock()).setPrice(book.getPrice()).build();
+        return new BookDTOBuilder().setTitle(book.getTitle()).setAuthor(book.getAuthor()).setStock(book.getStock()).setPrice(book.getPrice()).setPublishedDate(book.getPublishedDate()).build();
     }
 
     public static Book convertBookDTOToBook(BookDTO bookDTO) {
-        return new BookBuilder().setTitle(bookDTO.getTitle()).setAuthor(bookDTO.getAuthor()).setPublishedDate(LocalDate.of(2010, 1, 1)).setStock(bookDTO.getStock()).setPrice(bookDTO.getPrice()).build();
+        return new BookBuilder().setTitle(bookDTO.getTitle()).setAuthor(bookDTO.getAuthor()).setPublishedDate(bookDTO.getPublishedDate()).setStock(bookDTO.getStock()).setPrice(bookDTO.getPrice()).build();
     }
 
     public static List<BookDTO> convertBookListToBookDTOList(List<Book> books) {

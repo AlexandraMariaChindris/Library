@@ -6,7 +6,6 @@ import view.model.BookDTO;
 import view.model.OrderDTO;
 import view.model.builder.OrderDTOBuilder;
 
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,7 +28,7 @@ public class OrderMapper {
     }
 
     public static Order convertBookDTOToOrder(BookDTO bookDTO, Long id) {
-        return new OrderBuilder().setAuthor(bookDTO.getAuthor()).setTitle(bookDTO.getTitle()).setPrice(bookDTO.getPrice()).setQuantity(1).setIdUserLogged(id).build();
+        return new OrderBuilder().setAuthor(bookDTO.getAuthor()).setTitle(bookDTO.getTitle()).setPrice(bookDTO.getPrice()).setQuantity(1).setUserId(id).build();
     }
 
     public static OrderDTO convertBookDTOToOrderDTO(BookDTO bookDTO) {

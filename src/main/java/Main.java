@@ -1,6 +1,5 @@
 import database.DatabaseConnectionFactory;
-import model.Book;
-import model.builder.BookBuilder;
+
 import repository.book.BookRepository;
 import repository.book.BookRepositoryCacheDecorator;
 import repository.book.BookRepositoryMySQL;
@@ -16,6 +15,8 @@ import service.user.AuthenticationServiceImpl;
 
 import java.sql.Connection;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Main {
 
@@ -33,15 +34,17 @@ public class Main {
         UserRepository userRepository = new UserRepositoryMySQL(connection, rightsRolesRepository);
         AuthenticationService authenticationService = new AuthenticationServiceImpl(userRepository, rightsRolesRepository);
 
-        if(userRepository.existsByUsername("ale01")){
-            System.out.println("Username already used");
-        }
-        else {
-            authenticationService.register("ale01", "parola123!");
-        }
+//        if(userRepository.existsByUsername("ale01")){
+//            System.out.println("Username already used");
+//        }
+//        else {
+//            authenticationService.register("ale01", "parola123!");
+//        }
+//
+//        System.out.println(authenticationService.login("ale01", "parola123!"));
 
-        System.out.println(authenticationService.login("ale01", "parola123!"));
-
-
+        LocalDateTime d = LocalDateTime.parse("2024-12-02 23:39:43");
+        DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        System.out.println(d);
     }
 }

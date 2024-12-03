@@ -4,10 +4,14 @@ import controller.AdminController;
 import database.DatabaseConnectionFactory;
 import javafx.stage.Stage;
 import mapper.EmployeeMapper;
+import repository.order.OrderRepository;
+import repository.order.OrderRepositoryMySQL;
 import repository.security.RightsRolesRepository;
 import repository.security.RightsRolesRepositoryMySQLImpl;
 import repository.user.UserRepository;
 import repository.user.UserRepositoryMySQL;
+import service.order.OrderService;
+import service.order.OrderServiceImpl;
 import service.user.AuthenticationService;
 import service.user.AuthenticationServiceImpl;
 import view.AdminView;
@@ -22,6 +26,8 @@ public class AdminComponentFactory {
     private final AdminController adminController;
     private final AuthenticationService authenticationService;
     private final UserRepository userRepository;
+    private final OrderRepository orderRepository;
+    private final OrderService orderService ;
     private final RightsRolesRepository rightsRolesRepository;
 
     private static AdminComponentFactory instance;
@@ -38,16 +44,19 @@ public class AdminComponentFactory {
     }
 
     private AdminComponentFactory(Boolean componentsForTest, Stage primaryStage) {
+
         Connection connection = DatabaseConnectionFactory.getConnectionWrapper(componentsForTest).getConnection();
         rightsRolesRepository = new RightsRolesRepositoryMySQLImpl(connection);
         userRepository = new UserRepositoryMySQL(connection, rightsRolesRepository);
+        orderRepository = new OrderRepositoryMySQL(connection);
+        orderService = new OrderServiceImpl(orderRepository);
         authenticationService = new AuthenticationServiceImpl(userRepository, rightsRolesRepository);
 
         List<EmployeeDTO> employees = EmployeeMapper.convertEmployeeListToEmployeeDTOList(userRepository.findAll());
 
         adminView = new AdminView(primaryStage, employees);
 
-        adminController = new AdminController(adminView, authenticationService);
+        adminController = new AdminController(adminView, authenticationService, orderService);
     }
 
     public AdminView getAdminView() {

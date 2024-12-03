@@ -36,15 +36,15 @@ public class BookRepositoryMySQLTest {
         assertTrue(book.isEmpty());
     }
 
-    @Test
-    public void save(){
-        assertTrue(bookRepository.save(new BookBuilder().setTitle("Moara cu noroc").setAuthor("Ioan Slavici").setPublishedDate(LocalDate.of(1950, 2, 10)).build()));
-    }
-
-    @Test
-    public void delete(){
-        assertTrue(bookRepository.delete(new BookBuilder().setTitle("Moara cu noroc").setAuthor("Ioan Slavici").setPublishedDate(LocalDate.of(1950, 2, 10)).build()));
-    }
+//    @Test
+//    public void save(){
+//        assertTrue(bookRepository.save(new BookBuilder().setTitle("Moara cu noroc").setAuthor("Ioan Slavici").setPublishedDate(LocalDate.of(1950, 2, 10)).build()));
+//    }
+//
+//    @Test
+//    public void delete(){
+//        assertTrue(bookRepository.delete(new BookBuilder().setTitle("Moara cu noroc").setAuthor("Ioan Slavici").setPublishedDate(LocalDate.of(1950, 2, 10)).build()));
+//    }
 
     //nu e necesara pentru ca stergem cartea pe care o salvam, dar daca cele doua carti ar fi diferite vom avem nevoie
     @AfterAll

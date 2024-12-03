@@ -40,10 +40,12 @@ public class OrderRepositoryMySQL implements OrderRepository {
     private Order getOrderFromResultSet(ResultSet resultSet) throws SQLException {
         return new OrderBuilder()
                 .setId(resultSet.getLong("id"))
+                .setUserId(resultSet.getLong("user_id"))
                 .setTitle(resultSet.getString("title"))
                 .setAuthor(resultSet.getString("author"))
                 .setPrice(resultSet.getFloat("price"))
                 .setQuantity(resultSet.getInt("quantity"))
+                .setTime(resultSet.getTimestamp("time").toLocalDateTime())
                 .build();
     }
 
