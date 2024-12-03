@@ -1,7 +1,6 @@
 package model;
 
-import java.sql.Timestamp;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Order {
 
@@ -11,6 +10,8 @@ public class Order {
     private String author;
     private Integer quantity;
     private Float price;
+    private LocalDateTime time;
+
 
 
     public Long getId() {
@@ -61,5 +62,28 @@ public class Order {
         this.price = price;
     }
 
+    public LocalDateTime getTime() {
+        return time;
+    }
 
+    public void setTime(LocalDateTime time) {
+        this.time = time;
+    }
+
+    public String timeToString(LocalDateTime time) {
+        return time.getYear() + "-" + time.getMonthValue() + "-" + time.getDayOfMonth() + " " + time.getHour() + ":" + time.getMinute() + ":" + time.getSecond();
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", user_id=" + user_id +
+                ", title='" + title + '\'' +
+                ", author='" + author + '\'' +
+                ", quantity=" + quantity +
+                ", price=" + price +
+                ", time=" + time +
+                '}';
+    }
 }

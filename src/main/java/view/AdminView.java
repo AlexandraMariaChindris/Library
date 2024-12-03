@@ -1,6 +1,5 @@
 package view;
 
-import controller.BookController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -11,8 +10,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import view.model.BookDTO;
 import view.model.EmployeeDTO;
 
 import java.util.List;
@@ -28,8 +28,11 @@ public class AdminView {
     private Label usernameLabel;
     private Label passwordLabel;
 
-    private Button saveButton;
+    private Button addButton;
     private Button pdfButton;
+    private Button logoutButton;
+
+    private Text actionTarget;
 
     private Stage stage;
     private Scene scene;
@@ -47,13 +50,13 @@ public class AdminView {
         employeesObservableList = FXCollections.observableList(employees);
 
         initTableView(gridPane);
-        initSaveOptions(gridPane);
+        initializeFields(gridPane);
 
         stage.show();
 
     }
 
-    private void initSaveOptions(GridPane gridPane) {
+    private void initializeFields(GridPane gridPane) {
 
         usernameLabel = new Label("Username");
         gridPane.add(usernameLabel, 1, 1);
@@ -67,11 +70,18 @@ public class AdminView {
         passwordTextField = new TextField();
         gridPane.add(passwordTextField, 4, 1);
 
-        saveButton = new Button("Add");
-        gridPane.add(saveButton, 5, 1);
+        addButton = new Button("Add");
+        gridPane.add(addButton, 5, 1);
 
         pdfButton = new Button("Generate pdf");
         gridPane.add(pdfButton, 6, 1);
+
+        logoutButton = new Button("Logout");
+        gridPane.add(logoutButton, 7, 1);
+
+        actionTarget = new Text();
+        actionTarget.setFill(Color.FIREBRICK);
+        gridPane.add(actionTarget, 3, 2);
 
     }
 
@@ -97,10 +107,16 @@ public class AdminView {
         gridPane.setPadding(new Insets(25, 25, 25, 25));
     }
 
-    public void addSaveButtonListener(EventHandler<ActionEvent> saveButtonListener) {
+    public void addAddButtonListener(EventHandler<ActionEvent> saveButtonListener) {
+        addButton.setOnAction(saveButtonListener);
     }
 
     public void addPdfButtonListener(EventHandler<ActionEvent> pdfButtonListener) {
+        pdfButton.setOnAction(pdfButtonListener);
+    }
+
+    public void addLogoutButtonListener(EventHandler<ActionEvent> logoutButtonListener){
+        logoutButton.setOnAction(logoutButtonListener);
     }
 
     public void removeEmployeeFromObservableList(EmployeeDTO employeeDTO){
@@ -119,15 +135,27 @@ public class AdminView {
         return scene;
     }
 
-    public TextField getUsernameTextField() {
-        return usernameTextField;
+    public String getUsername() {
+        return usernameTextField.getText();
     }
 
-    public TextField getPasswordTextField() {
-        return passwordTextField;
+    public String getPassword() {
+        return passwordTextField.getText();
     }
 
     public TableView getEmployeesTableView() {
         return employeesTableView;
     }
+
+    public void addDisplayAlertMessage(String title, String header, String contentInformation){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(contentInformation);
+
+        alert.showAndWait();
+    }
+
+    public void setActionTargetText(String text){ this.actionTarget.setText(text);}
+
 }

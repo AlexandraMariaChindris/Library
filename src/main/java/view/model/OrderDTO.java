@@ -2,11 +2,14 @@ package view.model;
 
 import javafx.beans.property.*;
 
+import java.time.LocalDateTime;
+
 public class OrderDTO {
+
 
     private StringProperty author;
 
-    public void setauthor(String author) {
+    public void setAuthor(String author) {
         authorProperty().set(author);
     }
 
@@ -70,6 +73,23 @@ public class OrderDTO {
             price = new SimpleFloatProperty(this, "price");
         }
         return price;
+    }
+
+    private ObjectProperty<LocalDateTime> time;
+
+    public void setTime(LocalDateTime time) {
+        timeProperty().set(time);
+    }
+
+    public LocalDateTime getTime() {
+        return timeProperty().get();
+    }
+
+    public ObjectProperty<LocalDateTime> timeProperty() {
+        if(time == null) {
+            time = new SimpleObjectProperty(this, "time");
+        }
+        return time;
     }
 
 }

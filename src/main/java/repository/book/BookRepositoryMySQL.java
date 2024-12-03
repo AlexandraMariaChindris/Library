@@ -4,6 +4,7 @@ import model.Book;
 import model.builder.BookBuilder;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -39,11 +40,15 @@ public class BookRepositoryMySQL implements BookRepository {
 
     private Book getBookFromResultSet(ResultSet resultSet) throws SQLException {
 
+        LocalDate date = null;
+        if(resultSet.getDate("publishedDate") != null) {
+            date = new Date(resultSet.getDate("publishedDate").getTime()).toLocalDate();
+        }
         return new BookBuilder()
                 .setId(resultSet.getLong("id"))
                 .setTitle(resultSet.getString("title"))
                 .setAuthor(resultSet.getString("author"))
-                .setPublishedDate(new java.sql.Date(resultSet.getDate("publishedDate").getTime()).toLocalDate())
+                .setPublishedDate(date)
                 .setStock(resultSet.getInt("stock"))
                 .setPrice(resultSet.getFloat("price"))
                 .build();
@@ -77,7 +82,12 @@ public class BookRepositoryMySQL implements BookRepository {
             PreparedStatement preparedStatement = connection.prepareStatement(newSql);
             preparedStatement.setString(1, book.getAuthor());
             preparedStatement.setString(2, book.getTitle());
-            preparedStatement.setDate(3, Date.valueOf(book.getPublishedDate()));
+
+            if(book.getPublishedDate() == null)
+                preparedStatement.setNull(3, java.sql.Types.DATE);
+            else
+                preparedStatement.setDate(3, Date.valueOf(book.getPublishedDate()));
+
             preparedStatement.setInt(4, book.getStock());
             preparedStatement.setFloat(5, book.getPrice());
 

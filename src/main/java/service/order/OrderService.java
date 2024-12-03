@@ -10,4 +10,5 @@ public interface OrderService {
     Order findById(Long id);
     boolean save(Order order);
     boolean delete(Order order);
+    boolean generatePdfRaport();
 }

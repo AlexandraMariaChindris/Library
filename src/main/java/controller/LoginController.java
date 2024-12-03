@@ -4,19 +4,22 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import launcher.AdminComponentFactory;
 import launcher.EmployeeComponentFactory;
+import model.Role;
 import model.User;
 import model.validator.Notification;
 import service.user.AuthenticationService;
 import view.LoginView;
+
+import static database.Constants.Roles.ADMINISTRATOR;
+import static database.Constants.Roles.CUSTOMER;
 
 
 public class LoginController {
 
     private final LoginView loginView;
     private final AuthenticationService authenticationService;
-
-    private Long user_id_logged;
 
 
     public LoginController(LoginView loginView, AuthenticationService authenticationService) {
@@ -34,30 +37,38 @@ public class LoginController {
         public void handle(javafx.event.ActionEvent event) {
             String username = loginView.getUsername();
             String password = loginView.getPassword();
-            Long user_id_logged = null;
+
 
             Notification<User> LoginNotification = authenticationService.login(username, password);
-            //boolean loginSuccessfull = false;
+
             if (LoginNotification.hasErrors()){
                 loginView.setActionTargetText(LoginNotification.getFormattedErrors());
             }else{
-                //loginView.setActionTargetText("LogIn Successfull!");
-                user_id_logged = LoginNotification.getResult().getId();
+                loginView.setActionTargetText("Login Successfull!");
+                User user = LoginNotification.getResult();
 
-                Stage stage = EmployeeComponentFactory.getInstance(false, loginView.getStage()).getBookView().getStage();
-                Scene scene = EmployeeComponentFactory.getInstance(false, loginView.getStage()).getBookView().getScene();
-                EmployeeComponentFactory.getInstance(false, stage).getBookView().getStage().setScene(scene);
+                if(isAdministrator(user)){
+                    Stage stage = AdminComponentFactory.getInstance(false, loginView.getStage()).getAdminView().getStage();;
+                    Scene scene = AdminComponentFactory.getInstance(false, loginView.getStage()).getAdminView().getScene();
 
-                EmployeeComponentFactory.getInstance(false, loginView.getStage()).getBookController().setUser_id_logged(user_id_logged);
-                //loginSuccessfull = true;
+                    AdminComponentFactory.getInstance(false, stage).getAdminView().getStage().setScene(scene);
+                }else{
+                    Stage stage = EmployeeComponentFactory.getInstance(false, loginView.getStage()).getBookView().getStage();
+                    Scene scene = EmployeeComponentFactory.getInstance(false, loginView.getStage()).getBookView().getScene();
+
+                    EmployeeComponentFactory.getInstance(false, stage).getBookView().getStage().setScene(scene);
+                    EmployeeComponentFactory.getInstance(false, loginView.getStage()).getBookController().setUser_id_logged(user.getId());
+                }
             }
-
-//            if(loginSuccessfull){
-//
-//                ComponentFactory.getInstance(false, loginView.getStage()).getBookController().setUser_id_logged(user_id_logged);
-//                //ComponentFactory.getInstance(false, loginView.getStage());
-//            }
         }
+    }
+
+    private boolean isAdministrator(User user){
+        for(Role role : user.getRoles()){
+            if(role.getRole().equals(ADMINISTRATOR))
+                return true;
+        }
+        return false;
     }
 
     private class RegisterButtonListener implements EventHandler<ActionEvent> {
@@ -67,7 +78,7 @@ public class LoginController {
             String username = loginView.getUsername();
             String password = loginView.getPassword();
 
-            Notification<Boolean> registerNotification = authenticationService.register(username, password);
+            Notification<Boolean> registerNotification = authenticationService.register(username, password, CUSTOMER);
 
             if (registerNotification.hasErrors()) {
                 loginView.setActionTargetText(registerNotification.getFormattedErrors());
@@ -76,11 +87,4 @@ public class LoginController {
         }
     }
 
-    public Long getUser_id_logged() {
-        return user_id_logged;
-    }
-
-    public void setUser_id_logged(Long user_id_logged) {
-        this.user_id_logged = user_id_logged;
-    }
 }

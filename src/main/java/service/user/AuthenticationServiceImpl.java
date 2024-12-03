@@ -25,15 +25,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public Notification<Boolean> register(String username, String password) {
+    public Notification<Boolean> register(String username, String password, String role) {
 
         
-        Role customerRole = rightsRolesRepository.findRoleByTitle(CUSTOMER);
+        Role userRole = rightsRolesRepository.findRoleByTitle(role);
         
         User user = new UserBuilder()
                 .setUsername(username)
                 .setPassword(password)
-                .setRoles(Collections.singletonList(customerRole))//creeaza o lista de tipul singleton, o lista imutabila, care are o singura copie la un singur element
+                .setRoles(Collections.singletonList(userRole))//creeaza o lista de tipul singleton, o lista imutabila, care are o singura copie la un singur element
                 .build();
 
         UserValidator userValidator = new UserValidator(user);

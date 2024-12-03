@@ -1,6 +1,7 @@
 package view;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -53,6 +54,7 @@ public class BookView {
 
         booksObservableList = FXCollections.observableArrayList(books);
         ordersObservableList = FXCollections.observableArrayList(orders);
+
 
         initTableView(gridPane); //tot ce adaugam in grid se adauga automat in scene si in primary stage
         initOrderTableView(gridPane);
@@ -116,13 +118,16 @@ public class BookView {
         TableColumn<BookDTO, String> authorColumn = new TableColumn<BookDTO, String>("Author");
         authorColumn.setCellValueFactory(new PropertyValueFactory<>("author"));
 
+        TableColumn<BookDTO, String> publishedDateColumn = new TableColumn<BookDTO, String>("Published Date");
+        publishedDateColumn.setCellValueFactory(new PropertyValueFactory<>("publishedDate"));
+
         TableColumn<BookDTO, String> stockColumn = new TableColumn<BookDTO, String>("Stock");
         stockColumn.setCellValueFactory(new PropertyValueFactory<>("stock"));
 
         TableColumn<BookDTO, String> priceColumn = new TableColumn<BookDTO, String>("Price");
         priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
 
-        bookTableView.getColumns().addAll(titleColumn, authorColumn, stockColumn, priceColumn);
+        bookTableView.getColumns().addAll(titleColumn, authorColumn, publishedDateColumn, stockColumn, priceColumn);
         bookTableView.setItems(booksObservableList);
 
         gridPane.add(bookTableView, 0, 0, 5, 1);
@@ -132,6 +137,7 @@ public class BookView {
     private void initOrderTableView(GridPane gridPane) {
         orderTableView = new TableView<OrderDTO>();
         orderTableView.setPlaceholder(new Label("No orders to display"));
+
 
         TableColumn<OrderDTO, String> titleColumn = new TableColumn<OrderDTO, String>("Title");
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
@@ -145,7 +151,8 @@ public class BookView {
         TableColumn<OrderDTO, String> priceColumn = new TableColumn<OrderDTO, String>("Price");
         priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
 
-        orderTableView.getColumns().addAll(titleColumn, authorColumn, quantityColumn, priceColumn);
+
+        orderTableView.getColumns().addAll( titleColumn, authorColumn, quantityColumn, priceColumn);
         orderTableView.setItems(ordersObservableList);
 
 
@@ -216,16 +223,17 @@ public class BookView {
         this.booksObservableList.remove(bookDTO);
     }
 
-    public void updateBookObservableList(){
-        this.bookTableView.setItems(booksObservableList);
+    public void updateBookObservableList(Long id){
+        for(BookDTO bookDTO : booksObservableList){
+            if(Objects.equals(bookDTO.getId(), id)){
+                bookDTO.setStock(bookDTO.getStock() - 1);
+            }
+        }
+
     }
 
     public void addOrderToObservableList(OrderDTO orderDTO){
         this.ordersObservableList.add(orderDTO);
-    }
-
-    public void removeOrderFromObservaleList(OrderDTO orderDTO){
-        this.ordersObservableList.remove(orderDTO);
     }
 
     public TableView getBookTableView(){
@@ -235,4 +243,6 @@ public class BookView {
     public Scene getScene() {
         return scene;
     }
+
+
 }

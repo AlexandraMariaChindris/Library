@@ -2,7 +2,7 @@ package model.builder;
 
 import model.Order;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 public class OrderBuilder {
 
@@ -17,7 +17,7 @@ public class OrderBuilder {
         return this;
     }
 
-    public OrderBuilder setIdUserLogged(Long id){
+    public OrderBuilder setUserId(Long id){
         order.setUser_id(id);
         return this;
     }
@@ -42,11 +42,13 @@ public class OrderBuilder {
         return this;
     }
 
-
+    public OrderBuilder setTime(LocalDateTime time){
+        order.setTime(time);
+        return this;
+    }
 
     public Order build(){
         return order;
     }
-
 
 }

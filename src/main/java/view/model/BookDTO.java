@@ -7,9 +7,28 @@ import java.time.LocalDate;
 
 public class BookDTO {
     //mi se vor sterge si adauga carti in functie de ce contine ObservableList
+
+    private LongProperty id;
+
+
+    public Long getId(){
+        return idProperty().get();
+    }
+
+    public void setId(long id){
+        idProperty().set(id);
+    }
+
+    public LongProperty idProperty() {
+        if (id == null) {
+            id = new SimpleLongProperty(this, "id");
+        }
+        return id;
+    }
+
     private StringProperty author;
 
-    public void setauthor(String author) {
+    public void setAuthor(String author) {
         authorProperty().set(author);
     }
 
@@ -75,22 +94,22 @@ public class BookDTO {
         return price;
     }
 
-//    private ObjectProperty<LocalDate> publishedDate;
-//
-//    public void setPublishedDate(LocalDate publishedDate) {
-//       publishedDateProperty().set(publishedDate);
-//    }
-//
-//    public LocalDate getPublishedDate() {
-//        return publishedDateProperty().get();
-//    }
-//
-//    public ObjectProperty<LocalDate> publishedDateProperty() {
-//        if(publishedDate == null) {
-//            publishedDate = new SimpleObjectProperty(this, "publishedDate");
-//        }
-//        return publishedDate;
-//    }
+    private ObjectProperty<LocalDate> publishedDate;
+
+    public void setPublishedDate(LocalDate publishedDate) {
+       publishedDateProperty().set(publishedDate);
+    }
+
+    public LocalDate getPublishedDate() {
+        return publishedDateProperty().get();
+    }
+
+    public ObjectProperty<LocalDate> publishedDateProperty() {
+        if(publishedDate == null) {
+            publishedDate = new SimpleObjectProperty(this, "publishedDate");
+        }
+        return publishedDate;
+    }
 
 
 }
